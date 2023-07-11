@@ -27,19 +27,26 @@ describe "Merchants API" do
   describe "get api/v1/merchants/:id" do
     it "can get one merchant by it's id" do
       merchant1 = create(:merchant)
-
+      
       get "/api/v1/merchants/#{merchant1.id}"
-
+      
       merchant = JSON.parse(response.body, symbolize_names: true)
-
+      
       expect(response).to be_successful
-
+      
       expect(merchant[:data]).to have_key(:id)
       expect(merchant[:data][:id]).to be_a(String)
       expect(merchant[:data][:id].to_i).to eq(merchant1.id)
-
+      
       expect(merchant[:data][:attributes]).to have_key(:name)
       expect(merchant[:data][:attributes][:name]).to be_an(String)
+    end
+  end
+  
+  describe "get api/v1/merchants/:id/items" do
+    it "can get all of a specific merchant's items" do
+      merchant = create(:merchant)
+      
     end
   end
 end
