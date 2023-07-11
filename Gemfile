@@ -43,11 +43,11 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'shoulda-matchers'
+  gem 'rspec-rails'
+  gem 'pry'
 end
 
 group :test do
-  gem 'rspec-rails'
-  gem 'pry'
 end
 
 group :development do
