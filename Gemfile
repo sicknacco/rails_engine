@@ -11,6 +11,7 @@ gem "pg", "~> 1.1"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
+gem 'jsonapi-serializer'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
@@ -43,11 +44,11 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'shoulda-matchers'
+  gem 'rspec-rails'
+  gem 'pry'
 end
 
 group :test do
-  gem 'rspec-rails'
-  gem 'pry'
 end
 
 group :development do
