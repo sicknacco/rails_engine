@@ -32,7 +32,8 @@ describe "Items API" do
   end
   describe "get api/v1/items/:id" do
     it "can get one item by it's id" do
-      item = create(:item)
+      merchant = create(:merchant)
+      item = create(:item, merchant_id: merchant.id)
       
       get "/api/v1/items/#{item.id}"
       
