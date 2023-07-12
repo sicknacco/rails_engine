@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe "Items API" do
-  describe "get api/v1/items" do
+  describe "GET api/v1/items" do
     it "gets a list of all items" do
       merchant = create(:merchant)
       items = create_list(:item, 4, merchant_id: merchant.id)
@@ -31,7 +31,7 @@ describe "Items API" do
     end
   end
 
-  describe "get api/v1/items/:id" do
+  describe "GET api/v1/items/:id" do
     it "can get one item by it's id" do
       merchant = create(:merchant)
       item1 = create(:item, merchant_id: merchant.id)
@@ -57,17 +57,17 @@ describe "Items API" do
     end
   end
 
-  describe "post /app/v1/items" do
+  describe "POST /app/v1/items" do
     it "can create a new item" do
       merchant = create(:merchant)
-      @item_params = {
+      item_params = {
         name: 'New Item',
         description: 'New Description',
         unit_price: 11.99,
         merchant_id: merchant.id
       }
 
-      post '/api/v1/items', params: { item: @item_params}
+      post '/api/v1/items', params: { item: item_params}
 
       expect(response).to be_successful
 
@@ -76,6 +76,31 @@ describe "Items API" do
       expect(item[:data][:attributes][:name]).to eq('New Item')
       expect(item[:data][:attributes][:description]).to eq('New Description')
       expect(item[:data][:attributes][:unit_price]).to eq(11.99)
+      expect(item[:data][:attributes][:merchant_id]).to eq(merchant.id)
+    end
+  end
+
+  describe "PUT /api/v1/items/:id" do
+    it "can update an existing item" do
+      merchant = create(:merchant)
+      item1 = create(:item, merchant_id: merchant.id)
+
+      update_params = {
+        name: "Update Item",
+        description: "Updated Description",
+        unit_price: 20.99,
+        merchant_id: merchant.id
+      }
+
+      put "/api/v1/items/#{item1.id}", params: { item: update_params }
+
+      expect(response).to be_successful
+
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item[:data][:attributes][:name]).to eq('Update Item')
+      expect(item[:data][:attributes][:description]).to eq('Updated Description')
+      expect(item[:data][:attributes][:unit_price]).to eq(20.99)
       expect(item[:data][:attributes][:merchant_id]).to eq(merchant.id)
     end
   end
