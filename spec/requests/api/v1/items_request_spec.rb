@@ -57,13 +57,13 @@ describe "Items API" do
     end
   end
 
-  describe "post /items" do
+  describe "post /app/v1/items" do
     it "can create a new item" do
       merchant = create(:merchant)
       @item_params = {
         name: 'New Item',
         description: 'New Description',
-        unit_price: 10.99,
+        unit_price: 11.99,
         merchant_id: merchant.id
       }
 
@@ -71,12 +71,12 @@ describe "Items API" do
 
       expect(response).to be_successful
 
-      item = JSON.parse(response.body)
+      item = JSON.parse(response.body, symbolize_names: true)
 
-      expect(item[:name]).to eq('New Item')
-      expect(item[:description]).to eq('New Description')
-      expect(item[:unit_price]).to eq(10.99)
-      expect(item[:merchant_id]).to eq(merchant.id)
+      expect(item[:data][:attributes][:name]).to eq('New Item')
+      expect(item[:data][:attributes][:description]).to eq('New Description')
+      expect(item[:data][:attributes][:unit_price]).to eq(11.99)
+      expect(item[:data][:attributes][:merchant_id]).to eq(merchant.id)
     end
   end
 end
