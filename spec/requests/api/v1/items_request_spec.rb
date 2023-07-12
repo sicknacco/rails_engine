@@ -67,7 +67,7 @@ describe "Items API" do
         merchant_id: merchant.id
       }
 
-      post '/items', params: { item: @item_params}
+      post '/api/v1/items', params: { item: @item_params}
 
       expect(response).to be_successful
 
