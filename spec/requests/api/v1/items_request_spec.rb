@@ -30,6 +30,7 @@ describe "Items API" do
       end
     end
   end
+
   describe "get api/v1/items/:id" do
     it "can get one item by it's id" do
       merchant = create(:merchant)
@@ -37,9 +38,9 @@ describe "Items API" do
       
       get "/api/v1/items/#{item1.id}"
       
-      item = JSON.parse(response.body, symbolize_names: true)
-      
       expect(response).to be_successful
+
+      item = JSON.parse(response.body, symbolize_names: true)
       
       expect(item[:data]).to have_key(:id)
       expect(item[:data][:id]).to be_a(String)
@@ -53,6 +54,29 @@ describe "Items API" do
 
       expect(item[:data][:attributes]).to have_key(:unit_price)
       expect(item[:data][:attributes][:unit_price]).to be_a(Float)
+    end
+  end
+
+  describe "post /app/v1/items" do
+    it "can create a new item" do
+      merchant = create(:merchant)
+      @item_params = {
+        name: 'New Item',
+        description: 'New Description',
+        unit_price: 11.99,
+        merchant_id: merchant.id
+      }
+
+      post '/api/v1/items', params: { item: @item_params}
+
+      expect(response).to be_successful
+
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item[:data][:attributes][:name]).to eq('New Item')
+      expect(item[:data][:attributes][:description]).to eq('New Description')
+      expect(item[:data][:attributes][:unit_price]).to eq(11.99)
+      expect(item[:data][:attributes][:merchant_id]).to eq(merchant.id)
     end
   end
 end
