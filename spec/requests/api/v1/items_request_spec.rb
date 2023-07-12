@@ -108,16 +108,15 @@ describe "Items API" do
   describe "DELETE /api/v1/items/:id" do
     it "can delete an existing item" do
       merchant = create(:merchant)
-      item1 = create(:item, merchant_id: merchant.id)
+      item = create(:item, merchant_id: merchant.id)
 
       expect(Item.count).to eq(1)
 
-      delete "/api/v1/items/#{item1.id}"
+      delete "/api/v1/items/#{item.id}"
       
       expect(response).to be_successful
       expect(Item.count).to eq(0)
-      expect(Item.count).to change(Item.count).by(-1)
-      expect(Item.find(item1.id)).to raise_error(ActiveRecord::RecordNotFound)
+      expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end
