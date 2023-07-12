@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe "Merchants API" do
-  describe "get api/v1/merchants" do
+  describe "GET api/v1/merchants" do
     it "gets a list of all merchants" do
       create_list(:merchant, 3)
       
@@ -24,7 +24,7 @@ describe "Merchants API" do
     end
   end
   
-  describe "get api/v1/merchants/:id" do
+  describe "GET api/v1/merchants/:id" do
     it "can get one merchant by it's id" do
       merchant1 = create(:merchant)
       
@@ -43,7 +43,7 @@ describe "Merchants API" do
     end
   end
   
-  describe "get api/v1/merchants/:id/items" do
+  describe "GET api/v1/merchants/:id/items" do
     it "can get all of a specific merchant's items" do
       merchant = create(:merchant)
       items = create_list(:item, 4, merchant_id: merchant.id)
