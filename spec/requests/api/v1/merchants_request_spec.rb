@@ -30,9 +30,9 @@ describe "Merchants API" do
       
       get "/api/v1/merchants/#{merchant1.id}"
       
-      merchant = JSON.parse(response.body, symbolize_names: true)
-      
       expect(response).to be_successful
+
+      merchant = JSON.parse(response.body, symbolize_names: true)
       
       expect(merchant[:data]).to have_key(:id)
       expect(merchant[:data][:id]).to be_a(String)
@@ -79,7 +79,6 @@ describe "Merchants API" do
         get "/api/v1/merchants"
 
         expect(response).to be_successful
-
         merchants = JSON.parse(response.body, symbolize_names: true)
 
         expect(merchants[:data]).to be_empty
@@ -91,9 +90,8 @@ describe "Merchants API" do
         get "/api/v1/merchants/9999"
 
         expect(response).to have_http_status(404)
-
         error = JSON.parse(response.body, symbolize_names: true)
-
+        
         expect(error[:error]).to eq("Merchant not found")
       end
     end
@@ -101,11 +99,10 @@ describe "Merchants API" do
     describe "GET /api/v1/merchants/:id/items" do
       it "returns error when a merchant is not found" do
         get "/api/v1/merchants/9999/items"
-
+        
         expect(response).to have_http_status(404)
-
         error = JSON.parse(response.body, symbolize_names: true)
-
+        
         expect(error[:error]).to eq("Merchant not found")
       end
     end

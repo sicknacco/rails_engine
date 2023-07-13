@@ -148,5 +148,16 @@ describe "Items API" do
         expect(items[:data]).to be_empty
       end
     end
+
+    describe "GET /api/v1/items/:id" do
+      it "returns error when an item is not found" do
+        get "/api/v1/items/9999"
+
+        expect(response).to have_http_status(404)
+        error = JSON.parse(response.body, symbolize_names: true)
+        
+        expect(error[:error]).to eq("Item not found")
+      end
+    end
   end
 end
