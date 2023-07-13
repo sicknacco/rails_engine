@@ -163,7 +163,7 @@ describe "Items API" do
     end
 
     describe "POST /api/v1/items" do
-      context "when invalid parameters are provided" do
+      describe "when invalid parameters are provided" do
         it "returns an error message and status 422" do
           merchant = create(:merchant)
           invalid_item_params = {
@@ -175,7 +175,7 @@ describe "Items API" do
     
           post '/api/v1/items', params: { item: invalid_item_params }
     
-          # expect(response).not_to be_successful
+          expect(response).not_to be_successful
           expect(response).to have_http_status(422)
     
           error = JSON.parse(response.body, symbolize_names: true)
