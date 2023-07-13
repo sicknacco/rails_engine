@@ -97,5 +97,17 @@ describe "Merchants API" do
         expect(error[:error]).to eq("Merchant not found")
       end
     end
+
+    describe "GET /api/v1/merchants/:id/items" do
+      it "returns error when a merchant is not found" do
+        get "/api/v1/merchants/9999/items"
+
+        expect(response).to have_http_status(404)
+
+        error = JSON.parse(response.body, symbolize_names: true)
+
+        expect(error[:error]).to eq("Merchant not found")
+      end
+    end
   end
 end
