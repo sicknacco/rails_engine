@@ -157,6 +157,7 @@ describe "Items API" do
         expect(response).to have_http_status(404)
         error = JSON.parse(response.body, symbolize_names: true)
         
+        expect{Item.find(9999)}.to raise_error(ActiveRecord::RecordNotFound)
         expect(error[:error]).to eq("Item not found")
       end
     end

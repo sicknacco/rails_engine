@@ -93,6 +93,7 @@ describe "Merchants API" do
         expect(response).to have_http_status(404)
         error = JSON.parse(response.body, symbolize_names: true)
         
+        expect{Merchant.find(9999)}.to raise_error(ActiveRecord::RecordNotFound)
         expect(error[:error]).to eq("Merchant not found")
       end
     end
@@ -104,7 +105,8 @@ describe "Merchants API" do
         expect(response).to_not be_successful
         expect(response).to have_http_status(404)
         error = JSON.parse(response.body, symbolize_names: true)
-        
+
+        expect{Merchant.find(9999)}.to raise_error(ActiveRecord::RecordNotFound)
         expect(error[:error]).to eq("Merchant not found")
       end
     end
