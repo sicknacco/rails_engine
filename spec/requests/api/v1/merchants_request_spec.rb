@@ -72,4 +72,30 @@ describe "Merchants API" do
       end
     end
   end
+
+  describe "Sad Path Tests" do
+    describe "GET /api/v1/merchants" do
+      it "returns an empty array when there are no merchants" do
+        get "/api/v1/merchants"
+
+        expect(response).to be_successful
+
+        merchants = JSON.parse(response.body, symbolize_names: true)
+
+        expect(merchants[:data]).to be_empty
+      end
+    end
+
+    describe "GET /api/v1/merchants/:id" do
+      it "returns error when a merchant is not found" do
+        get "/api/v1/merchants/9999"
+
+        expect(response).to have_http_status(404)
+
+        error = JSON.parse(response.body, symbolize_names: true)
+
+        expect(error[:error]).to eq("Merchant not found")
+      end
+    end
+  end
 end

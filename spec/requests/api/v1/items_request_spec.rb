@@ -135,4 +135,18 @@ describe "Items API" do
       expect(merch_data[:data][:attributes][:name]).to eq(merchant.name)
     end
   end
+
+  describe "Sad Path Tests" do
+    describe "GET /api/v1/items" do
+      it "returns an empty array when there are no items" do
+        get "/api/v1/items"
+
+        expect(response).to be_successful
+
+        items = JSON.parse(response.body, symbolize_names: true)
+
+        expect(items[:data]).to be_empty
+      end
+    end
+  end
 end
