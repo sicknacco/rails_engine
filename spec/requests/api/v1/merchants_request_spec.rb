@@ -89,6 +89,7 @@ describe "Merchants API" do
       it "returns error when a merchant is not found" do
         get "/api/v1/merchants/9999"
 
+        expect(response).to_not be_successful
         expect(response).to have_http_status(404)
         error = JSON.parse(response.body, symbolize_names: true)
         
@@ -100,6 +101,7 @@ describe "Merchants API" do
       it "returns error when a merchant is not found" do
         get "/api/v1/merchants/9999/items"
         
+        expect(response).to_not be_successful
         expect(response).to have_http_status(404)
         error = JSON.parse(response.body, symbolize_names: true)
         

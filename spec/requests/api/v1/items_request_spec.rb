@@ -153,6 +153,7 @@ describe "Items API" do
       it "returns error when an item is not found" do
         get "/api/v1/items/9999"
 
+        expect(response).to_not be_successful
         expect(response).to have_http_status(404)
         error = JSON.parse(response.body, symbolize_names: true)
         
