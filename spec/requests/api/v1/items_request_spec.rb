@@ -164,7 +164,7 @@ describe "Items API" do
 
     describe "POST /api/v1/items" do
       describe "when invalid parameters are provided" do
-        it "returns an error message and status 422" do
+        it "returns an error message and status 404" do
           merchant = create(:merchant)
           invalid_item_params = {
             name: nil,
@@ -176,11 +176,36 @@ describe "Items API" do
           post '/api/v1/items', params: { item: invalid_item_params }
     
           expect(response).not_to be_successful
-          expect(response).to have_http_status(422)
+          expect(response).to have_http_status(404)
     
           error = JSON.parse(response.body, symbolize_names: true)
     
           expect(error[:error]).to eq("Record not created: No fields can be blank")
+        end
+      end
+    end
+
+    describe "PUT /api/v1/items/:id" do
+      describe "when updating with invalid parameters" do
+        it "returns an error message and status 404" do
+          merchant = create(:merchant)
+          item = create(:item, merchant_id: merchant.id)
+    
+          invalid_update_params = {
+            name: nil,
+            description: "Updated Description",
+            unit_price: 20.99,
+            merchant_id: merchant.id
+          }
+    
+          put "/api/v1/items/#{item.id}", params: { item: invalid_update_params }
+    
+          expect(response).not_to be_successful
+          expect(response).to have_http_status(404)
+    
+          error = JSON.parse(response.body, symbolize_names: true)
+    
+          expect(error[:error]).to eq("Record not updated: No fields can be blank")
         end
       end
     end
