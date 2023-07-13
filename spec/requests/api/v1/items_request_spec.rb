@@ -161,5 +161,28 @@ describe "Items API" do
         expect(error[:error]).to eq("Item not found")
       end
     end
+
+    describe "POST /api/v1/items" do
+      context "when invalid parameters are provided" do
+        it "returns an error message and status 422" do
+          merchant = create(:merchant)
+          invalid_item_params = {
+            name: nil,
+            description: 'New Description',
+            unit_price: 11.99,
+            merchant_id: merchant.id
+          }
+    
+          post '/api/v1/items', params: { item: invalid_item_params }
+    
+          # expect(response).not_to be_successful
+          expect(response).to have_http_status(422)
+    
+          error = JSON.parse(response.body, symbolize_names: true)
+    
+          expect(error[:error]).to eq("Record not created: No fields can be blank")
+        end
+      end
+    end
   end
 end

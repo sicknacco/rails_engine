@@ -13,8 +13,14 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create
-    render json: ItemSerializer.new(Item.create(item_params)), status: 201
+    item = Item.new(item_params)
+    if item.save
+      render json: ItemSerializer.new(item), status: 201
+    else
+      render json: { error: "Record not created: No fields can be blank" }, status: 422
+    end
   end
+  # render json: ItemSerializer.new(Item.create(item_params)), status: 201
 
   def update
     render json: ItemSerializer.new(Item.update(params[:id], item_params))
