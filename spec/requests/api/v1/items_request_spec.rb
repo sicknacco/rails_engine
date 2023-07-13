@@ -135,4 +135,92 @@ describe "Items API" do
       expect(merch_data[:data][:attributes][:name]).to eq(merchant.name)
     end
   end
+
+  describe "Sad Path Tests" do
+    describe "GET /api/v1/items" do
+      it "returns an empty array when there are no items" do
+        get "/api/v1/items"
+
+        expect(response).to be_successful
+
+        items = JSON.parse(response.body, symbolize_names: true)
+
+        expect(items[:data]).to be_empty
+      end
+    end
+
+    describe "GET /api/v1/items/:id" do
+      it "returns error when an item is not found" do
+        get "/api/v1/items/9999"
+
+        expect(response).to_not be_successful
+        expect(response).to have_http_status(404)
+        error = JSON.parse(response.body, symbolize_names: true)
+        
+        expect{Item.find(9999)}.to raise_error(ActiveRecord::RecordNotFound)
+        expect(error[:error]).to eq("Item not found")
+      end
+    end
+
+    describe "POST /api/v1/items" do
+      describe "when invalid parameters are provided" do
+        it "returns an error message and status 404" do
+          merchant = create(:merchant)
+          invalid_item_params = {
+            name: nil,
+            description: 'New Description',
+            unit_price: 11.99,
+            merchant_id: merchant.id
+          }
+    
+          post '/api/v1/items', params: { item: invalid_item_params }
+    
+          expect(response).not_to be_successful
+          expect(response).to have_http_status(404)
+    
+          error = JSON.parse(response.body, symbolize_names: true)
+    
+          expect(error[:error]).to eq("Record not created: No fields can be blank")
+        end
+      end
+    end
+
+    describe "PUT /api/v1/items/:id" do
+      describe "when updating with invalid parameters" do
+        it "returns an error message and status 404" do
+          merchant = create(:merchant)
+          item = create(:item, merchant_id: merchant.id)
+    
+          invalid_update_params = {
+            name: nil,
+            description: "Updated Description",
+            unit_price: 20.99,
+            merchant_id: merchant.id
+          }
+    
+          put "/api/v1/items/#{item.id}", params: { item: invalid_update_params }
+    
+          expect(response).not_to be_successful
+          expect(response).to have_http_status(404)
+    
+          error = JSON.parse(response.body, symbolize_names: true)
+    
+          expect(error[:error]).to eq("Record not updated: No fields can be blank")
+        end
+      end
+    end
+
+    describe "GET /api/v1/items/:id/merchant" do
+      it "returns error when an item is not found" do
+        get "/api/v1/items/9999/merchant"
+
+        expect(response).to_not be_successful
+        expect(response).to have_http_status(404)
+        error = JSON.parse(response.body, symbolize_names: true)
+        
+        expect{Item.find(9999)}.to raise_error(ActiveRecord::RecordNotFound)
+        expect(error[:error]).to eq("Item not found")
+      end
+    end
+  end
 end

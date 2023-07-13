@@ -30,9 +30,9 @@ describe "Merchants API" do
       
       get "/api/v1/merchants/#{merchant1.id}"
       
-      merchant = JSON.parse(response.body, symbolize_names: true)
-      
       expect(response).to be_successful
+
+      merchant = JSON.parse(response.body, symbolize_names: true)
       
       expect(merchant[:data]).to have_key(:id)
       expect(merchant[:data][:id]).to be_a(String)
@@ -69,6 +69,45 @@ describe "Merchants API" do
 
         expect(item[:attributes]).to have_key(:unit_price)
         expect(item[:attributes][:unit_price]).to be_an(Float)
+      end
+    end
+  end
+
+  describe "Sad Path Tests" do
+    describe "GET /api/v1/merchants" do
+      it "returns an empty array when there are no merchants" do
+        get "/api/v1/merchants"
+
+        expect(response).to be_successful
+        merchants = JSON.parse(response.body, symbolize_names: true)
+
+        expect(merchants[:data]).to be_empty
+      end
+    end
+
+    describe "GET /api/v1/merchants/:id" do
+      it "returns error when a merchant is not found" do
+        get "/api/v1/merchants/9999"
+
+        expect(response).to_not be_successful
+        expect(response).to have_http_status(404)
+        error = JSON.parse(response.body, symbolize_names: true)
+        
+        expect{Merchant.find(9999)}.to raise_error(ActiveRecord::RecordNotFound)
+        expect(error[:error]).to eq("Merchant not found")
+      end
+    end
+
+    describe "GET /api/v1/merchants/:id/items" do
+      it "returns error when a merchant is not found" do
+        get "/api/v1/merchants/9999/items"
+        
+        expect(response).to_not be_successful
+        expect(response).to have_http_status(404)
+        error = JSON.parse(response.body, symbolize_names: true)
+
+        expect{Merchant.find(9999)}.to raise_error(ActiveRecord::RecordNotFound)
+        expect(error[:error]).to eq("Merchant not found")
       end
     end
   end
