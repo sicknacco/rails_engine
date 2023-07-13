@@ -209,5 +209,18 @@ describe "Items API" do
         end
       end
     end
+
+    describe "GET /api/v1/items/:id/merchant" do
+      it "returns error when an item is not found" do
+        get "/api/v1/items/9999/merchant"
+
+        expect(response).to_not be_successful
+        expect(response).to have_http_status(404)
+        error = JSON.parse(response.body, symbolize_names: true)
+        
+        expect{Item.find(9999)}.to raise_error(ActiveRecord::RecordNotFound)
+        expect(error[:error]).to eq("Item not found")
+      end
+    end
   end
 end
