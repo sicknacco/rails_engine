@@ -73,6 +73,31 @@ describe "Merchants API" do
     end
   end
 
+  describe "Search for a Merchant" do
+    describe "GET /api/v1/merchants/find" do
+      xit "finds a merchant that matches the search" do
+        merchant1 = create(:merchant, name: "Jim Bob's")
+        merchant2 = create(:merchant, name: "Super Cool Store")
+        merchant3 = create(:merchant, name: "Ring World")
+        merchant4 = create(:merchant, name: "Turing")
+
+        get "/api/v1/merchants/find?name=ring"
+
+        expect(response).to be_successful
+
+        merchant = JSON.parse(response.body, symbolize_names: true)
+
+        expect(merchant[:data]).to have_key(:id)
+        expect(merchant[:data][:id].to_i).to be_an(Integer)
+        expect(merchant[:data][:id].to_i).to be_(merchant3.id)
+
+        expect(merchant[:data][:attributes]).to have_key(:name)
+        expect(merchant[:data][:attributes][:name]).to be_a(String)
+        expect(merchant[:data][:attributes][:name]).to eq("Ring World")
+      end
+    end
+  end
+
   describe "Sad Path Tests" do
     describe "GET /api/v1/merchants" do
       it "returns an empty array when there are no merchants" do
