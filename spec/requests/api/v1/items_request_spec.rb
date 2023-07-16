@@ -146,6 +146,7 @@ describe "Items API" do
         items = JSON.parse(response.body, symbolize_names: true)
 
         expect(items[:data]).to be_empty
+        ## expect it to be an array
       end
     end
 

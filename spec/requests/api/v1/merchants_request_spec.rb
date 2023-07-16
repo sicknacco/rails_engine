@@ -81,7 +81,7 @@ describe "Merchants API" do
         merchant3 = create(:merchant, name: "Ring World")
         merchant4 = create(:merchant, name: "Turing")
 
-        get "/api/v1/merchants/find?name=ring"
+        get "/api/v1/merchants/find?name=ring" #params { }
 
         expect(response).to be_successful
 
